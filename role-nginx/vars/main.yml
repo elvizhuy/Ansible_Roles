@@ -1,0 +1,3 @@
+---
+nginx_server_name: huynn.io
+upstream_server: 127.0.0.1:8080
