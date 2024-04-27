@@ -1,0 +1,12 @@
+---
+- hosts:
+    - database
+    - database_replica
+  user: "{{ ansible_ssh_user }}"
+  become_method: sudo
+  gather_facts: True
+  vars_files:
+    - ./vars/*.yml
+
+  roles:
+    - postgresql
