@@ -20,6 +20,7 @@
   stat:
     path: "{{ postgresql_data_dir }}/PG_VERSION"
   register: pgdata_dir_version
+  become: true
 
 - name: Ensure PostgreSQL database is initialized.
   command: "{{ postgresql_bin_path }}/initdb -D {{ postgresql_data_dir }}"
