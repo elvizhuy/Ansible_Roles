@@ -1,0 +1,18 @@
+# tasks/configure_master.yml
+
+- name: Ensure PostgreSQL is installed
+  yum:
+    name: postgresql-server
+    state: present
+
+- name: Configure PostgreSQL master
+  template:
+    src: postgresql.conf.j2
+    dest: "{{ postgresql_data_dir }}/postgresql.conf"
+  notify: restart postgresql
+
+- name: Configure pg_hba.conf for replication
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ postgresql_data_dir }}/pg_hba.conf"
+  notify: restart postgresql

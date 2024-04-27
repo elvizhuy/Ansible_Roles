@@ -15,6 +15,18 @@
 - include_tasks: initialize.yml
 - include_tasks: configure.yml
 
+- include_tasks: configure_slave.yml
+  vars:
+    master_host_ip: "{{ hostvars['database'].ansible_default_ipv4.address }}"
+    # slave_host_ip: "{{ hostvars['database_replica'].ansible_host }}"
+  when: ansible_host == master_host_ip
+
+- include_tasks: configure_slave.yml
+  vars:
+    slave_host_ip: "{{ hostvars['database_replica'].ansible_default_ipv4.address }}"
+    # slave_host_ip: "{{ hostvars['database_replica'].ansible_host }}"
+  when: ansible_host == slave_host_ip
+
 - name: Ensure PostgreSQL is started and enabled on boot.
   service:
     name: "{{ postgresql_daemon }}"

@@ -1,0 +1,14 @@
+# tasks/configure_slave.yml
+
+- name: Ensure PostgreSQL is installed
+  yum:
+    name: postgresql-server
+    state: present
+  become: true
+
+- name: Configure PostgreSQL slave
+  template:
+    src: recovery.conf.j2
+    dest: "{{ postgresql_data_dir }}/recovery.conf"
+  notify: restart postgresql
+  become: true

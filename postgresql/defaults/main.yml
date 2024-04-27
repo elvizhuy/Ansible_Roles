@@ -5,10 +5,12 @@ postgresql_enablerepo: ""
 # Set postgresql state when configuration changes are made. Recommended values:
 # `restarted` or `reloaded`
 postgresql_restarted_state: "restarted"
-
+postgresql_port: 5432
 postgresql_python_library: python-psycopg2
 postgresql_user: postgres
 postgresql_group: postgres
+replication_user: replication
+replication_password: replication
 
 # `md5` or `scram-sha-256` (https://www.postgresql.org/docs/10/auth-methods.html)
 postgresql_auth_method: "{{ ansible_fips  | ternary('scram-sha-256', 'md5') }}"
