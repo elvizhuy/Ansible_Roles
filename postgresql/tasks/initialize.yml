@@ -14,6 +14,7 @@
     group: "{{ postgresql_group }}"
     state: directory
     mode: 0700
+  become: true
 
 - name: Check if PostgreSQL database is initialized.
   stat:
@@ -36,3 +37,4 @@
     group: "{{ postgresql_group }}"
     state: directory
     mode: 0700
+  become: true
