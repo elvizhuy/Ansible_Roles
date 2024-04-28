@@ -8,7 +8,7 @@
   tasks:
     - name: Display the default IPv4 address of the host
       debug:
-        msg: "Default IPv4 address: {{ ansible_default_ipv4.address }}"
+        msg: "Default IPv4 address of 'database': {{ hostvars['database'].ansible_default_ipv4.address }}"
   vars_files:
     - ./vars/*.yml
 
