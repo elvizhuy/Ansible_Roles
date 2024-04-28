@@ -83,6 +83,7 @@ pg_port: 5432
 pgsqlrep_role: skip
 pgsqlrep_user: replication
 pgsqlrep_password: replication
+pg_data_dir: /var/lib/pgsql/data
 pgsqlrep_wal_level: hot_standby
 pgsqlrep_max_wal_senders: "{{ groups[pgsqlrep_group_name] | length * 2 }}"
 pgsqlrep_wal_keep_segments: 100

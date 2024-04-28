@@ -16,7 +16,7 @@
 - name: Create empty data directory
   file:
     # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
-    path: " {{ postgresql_data_dir }}"
+    path: " {{ pg_data_dir }}"
     state: directory
     owner: postgres
     group: postgres
