@@ -11,8 +11,8 @@ postgresql_user: postgres
 postgresql_group: postgres
 replication_user: replication
 replication_password: replication
-master_host_ip: "{{ hostvars['database'].ansible_default_ipv4.address }}"
-slave_host_ip: "{{ hostvars['database_replica'].ansible_default_ipv4.address }}"
+
+
 
 # `md5` or `scram-sha-256` (https://www.postgresql.org/docs/10/auth-methods.html)
 postgresql_auth_method: "{{ ansible_fips  | ternary('scram-sha-256', 'md5') }}"
