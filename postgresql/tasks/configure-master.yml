@@ -1,9 +1,9 @@
 # tasks/configure_master.yml
 
-- name: Ensure PostgreSQL is installed
-  yum:
-    name: postgresql-server
-    state: present
+# - name: Ensure PostgreSQL is installed
+#   yum:
+#     name: postgresql-server
+#     state: present
 
 - name: Configure PostgreSQL master
   template:

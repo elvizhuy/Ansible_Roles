@@ -1,10 +1,10 @@
 # tasks/configure_slave.yml
 
-- name: Ensure PostgreSQL is installed
-  yum:
-    name: postgresql-server
-    state: present
-  become: true
+# - name: Ensure PostgreSQL is installed
+#   yum:
+#     name: postgresql-server
+#     state: present
+#   become: true
 
 - name: Configure PostgreSQL slave
   template:
