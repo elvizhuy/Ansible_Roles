@@ -18,8 +18,8 @@
   environment:
     PGOPTIONS: "{{ (postgresql_auth_method == 'scram-sha-256') | ternary('-c password_encryption=scram-sha-256', '') }}"
 
-- name: Ensure PostgreSQL Replication users are present.
-  postgresql_user:
-    name: "{{ replication_user }}"
-    password: "{{ replication_password }}"
-  become: true
+# - name: Ensure PostgreSQL Replication users are present.
+#   postgresql_user:
+#     name: "{{ replication_user }}"
+#     password: "{{ replication_password }}"
+#   become: true
