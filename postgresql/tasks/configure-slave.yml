@@ -14,13 +14,14 @@
   become: true
 
 - name: Create empty data directory
-  file:
-    # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
-    path: " {{ pg_data_dir }}"
-    state: directory
-    owner: postgres
-    group: postgres
-    mode: "0700"
+  shell: mkdir -p {{ pg_data_dir }} && chown postgres:postgres {{ pg_data_dir }} && chmod 700 {{ pg_data_dir }}
+  # file:
+  #   # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
+  #   path: " {{ pg_data_dir }}"
+  #   state: directory
+  #   owner: postgres
+  #   group: postgres
+  #   mode: "0700"
   become: true
 
 - name: Create base backup
