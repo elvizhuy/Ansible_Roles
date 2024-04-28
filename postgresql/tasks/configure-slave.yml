@@ -1,8 +1,9 @@
 - name: Stop PostgreSQL
-  service:
-    # name: "{{ pgsql_service_name[pgsql_major_version] }}"
-    name: "{{ postgresql_daemon }}"
-    state: stopped
+  shell: "systemctl stop {{ postgresql_daemon }}"
+  # service:
+  #   # name: "{{ pgsql_service_name[pgsql_major_version] }}"
+  #   name: "{{ postgresql_daemon }}"
+  #   state: stopped
   become: true
 
 - name: Clear out data directory
