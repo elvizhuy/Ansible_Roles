@@ -5,6 +5,10 @@
   user: "{{ ansible_ssh_user }}"
   become_method: sudo
   gather_facts: True
+  tasks:
+    - name: Display the default IPv4 address of the host
+      debug:
+        msg: "Default IPv4 address: {{ ansible_default_ipv4.address }}"
   vars_files:
     - ./vars/*.yml
 
