@@ -59,8 +59,9 @@
   become_user: postgres
 
 - name: Start and enable PostgreSQL
-  service:
-    name: "{{ postgresql_daemon }}"
-    state: started
-    enabled: yes
+  shell: "systemctl start {{ postgresql_daemon }} && systemctl enable {{ postgresql_daemon }}"
+  # service:
+  #   name: "{{ postgresql_daemon }}"
+  #   state: started
+  #   enabled: yes
   become: true
