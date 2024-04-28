@@ -15,16 +15,29 @@
 - include_tasks: initialize.yml
 - include_tasks: configure.yml
 
+- import_tasks: pgsql_version.yml
+
+- name: Include distribution specific variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_facts.distribution }}-{{ ansible_facts.distribution_version }}.yml"
+        - "{{ ansible_facts.os_family }}-{{ ansible_facts.distribution_major_version }}.yml"
+        - "{{ ansible_facts.distribution }}.yml"
+        - "{{ ansible_facts.os_family }}.yml"
+      paths:
+        - "{{ role_path }}/vars"
+  tags:
+    - always
+
+- include_tasks: "{{ pgsqlrep_role }}.yml"
+  when: pgsqlrep_role != 'skip'
+
 - include_tasks: configure-master.yml
-  # vars:
-  #   master_host_ip: "{{ hostvars['database'].ansible_default_ipv4.address }}"
-  # slave_host_ip: "{{ hostvars['database_replica'].ansible_host }}"
   when: ansible_host == pgsqlrep_master_address
 
 - include_tasks: configure-slave.yml
-  # vars:
-  #   slave_host_ip: "{{ hostvars['database_replica'].ansible_default_ipv4.address }}"
-  # slave_host_ip: "{{ hostvars['database_replica'].ansible_host }}"
   when: ansible_host == pgsqlrep_replica_address
 
 - name: Ensure PostgreSQL is started and enabled on boot.

@@ -23,7 +23,7 @@
   become: true
 
 - name: Create base backup
-  command: pg_basebackup -X stream -D {{ pgsqlrep_data_path[pgsql_major_version] }} -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }}
+  command: pg_basebackup -X stream -D {{ postgresql_data_dir }} -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }}
   environment:
     PATH: /opt/rh/rh-postgresql10/root/usr/bin:{{ ansible_env.PATH }}
     LIBRARY_PATH: /opt/rh/rh-postgresql10/root/usr/lib64
