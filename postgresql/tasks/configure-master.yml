@@ -10,9 +10,11 @@
     src: postgresql.conf.j2
     dest: "{{ postgresql_data_dir }}/postgresql.conf"
   notify: restart postgresql
+  become: true
 
 - name: Configure pg_hba.conf for replication
   template:
     src: pg_hba.conf.j2
     dest: "{{ postgresql_data_dir }}/pg_hba.conf"
   notify: restart postgresql
+  become: true
