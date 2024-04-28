@@ -1,14 +1,14 @@
 - name: Stop PostgreSQL
   service:
     # name: "{{ pgsql_service_name[pgsql_major_version] }}"
-    name: " {{ postgresql_daemon }}"
+    name: "{{ postgresql_daemon }}"
     state: stopped
   become: true
 
 - name: Clear out data directory
   file:
     # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
-    path: " {{ postgresql_data_dir }}"
+    path: "{{ postgresql_data_dir }}"
     state: absent
   become: true
 
@@ -19,7 +19,7 @@
     state: directory
     owner: postgres
     group: postgres
-    mode: '0700'
+    mode: "0700"
   become: true
 
 - name: Create base backup
@@ -34,7 +34,6 @@
   become: true
   become_user: postgres
 
-
 - name: Create recovery.conf
   template:
     src: recovery.conf.j2
@@ -42,7 +41,7 @@
     dest: "{{ postgresql_data_dir }}/recovery.conf"
     owner: postgres
     group: postgres
-    mode: '0644'
+    mode: "0644"
   become: true
 
 - name: Enable hot standby
@@ -62,4 +61,3 @@
     state: started
     enabled: yes
   become: true
-
