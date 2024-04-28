@@ -1,8 +1,7 @@
 - name: Stop PostgreSQL
   service:
     # name: "{{ pgsql_service_name[pgsql_major_version] }}"
-    # name: " {{ postgresql_daemon }}"
-    name: " postgresql.service"
+    name: " {{ postgresql_daemon }}"
     state: stopped
   become: true
 
