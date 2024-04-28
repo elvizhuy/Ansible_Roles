@@ -20,7 +20,7 @@
 
 - name: Ensure PostgreSQL Replication users are present.
   postgresql_users:
-  - name: "{{ replication_user }}"
+    name: "{{ replication_user }}"
     password: "{{ replication_password }}"
     roles: replication
   become: true
