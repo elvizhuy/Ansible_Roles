@@ -7,12 +7,10 @@ postgresql_enablerepo: ""
 postgresql_restarted_state: "restarted"
 postgresql_port: 5432
 postgresql_python_library: python-psycopg2
-postgresql_user: 
-  - postgres
-  - replication
+postgresql_user: postgres
 postgresql_group: postgres
-# replication_user: replication
-# replication_password: replication
+replication_user: replication
+replication_password: replication
 # master_host_ip: "{{ hostvars['database'].ansible_default_ipv4.address }}"
 # slave_host_ip: "{{ hostvars['database_replica'].ansible_default_ipv4.address }}"
 master_host_ip: 192.168.1.110
