@@ -1,18 +1,21 @@
 - name: Stop PostgreSQL
   service:
-    name: "{{ pgsql_service_name[pgsql_major_version] }}"
+    # name: "{{ pgsql_service_name[pgsql_major_version] }}"
+    name: " {{ postgresql_daemon }}"
     state: stopped
   become: true
 
 - name: Clear out data directory
   file:
-    path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
+    # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
+    path: " {{ postgresql_data_dir }}"
     state: absent
   become: true
 
 - name: Create empty data directory
   file:
-    path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
+    # path: "{{ pgsqlrep_data_path[pgsql_major_version] }}"
+    path: " {{ postgresql_data_dir }}"
     state: directory
     owner: postgres
     group: postgres
@@ -34,7 +37,8 @@
 - name: Create recovery.conf
   template:
     src: recovery.conf.j2
-    dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/recovery.conf"
+    # dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/recovery.conf"
+    dest: "{{ postgresql_data_dir }}/recovery.conf"
     owner: postgres
     group: postgres
     mode: '0644'
@@ -44,7 +48,7 @@
   lineinfile:
     state: present
     backup: true
-    dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/postgresql.conf"
+    dest: "{{ postgresql_data_dir }}/postgresql.conf"
     regexp: '^#?hot_standby = \w+(\s+#.*)'
     line: 'hot_standby = yes\1'
     backrefs: yes
@@ -53,7 +57,7 @@
 
 - name: Start and enable PostgreSQL
   service:
-    name: "{{ pgsql_service_name[pgsql_major_version] }}"
+    name: "{{ postgresql_daemon }}"
     state: started
     enabled: yes
   become: true
