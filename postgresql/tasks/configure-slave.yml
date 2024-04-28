@@ -24,10 +24,10 @@
   become: true
 
 - name: Create base backup
-  expect:
-    command: pg_basebackup -X stream -D {{ postgresql_data_dir }} -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }} -w
-    responses:
-        "Password for user {{ pgsqlrep_user }}:": "{{ pgsqlrep_password }}"
+  command: |
+    PGPASSWORD={{ pgsqlrep_password }} pg_basebackup -X stream -D {{ postgresql_data_dir }} -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }}
+    # responses:
+    #     "Password for user {{ pgsqlrep_user }}:": "{{ pgsqlrep_password }}"
   # environment:
   #   PATH: /opt/rh/rh-postgresql10/root/usr/bin:{{ ansible_env.PATH }}
   #   LIBRARY_PATH: /opt/rh/rh-postgresql10/root/usr/lib64
