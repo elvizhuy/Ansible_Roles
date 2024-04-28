@@ -1,5 +1,3 @@
-# templates/recovery.conf.j2
-
-standby_mode = 'on'
-primary_conninfo = 'host={{ master_host_ip }} port={{ postgresql_port }} user={{ replication_user }} password={{ replication_password }}'
-trigger_file = '/tmp/pgsql.trigger'
+standby_mode=on
+trigger_file='/tmp/promotedb'
+primary_conninfo='host={{ pgsqlrep_master_address }} port={{ pg_port }} user={{ pgsqlrep_user }} application_name={{ pgsqlrep_application_name }}'

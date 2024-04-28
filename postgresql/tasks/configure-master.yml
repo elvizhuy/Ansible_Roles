@@ -1,20 +1,26 @@
-# tasks/configure_master.yml
-
-# - name: Ensure PostgreSQL is installed
-#   yum:
-#     name: postgresql-server
-#     state: present
-
-- name: Configure PostgreSQL master
-  template:
-    src: postgresql.conf.j2
-    dest: "{{ postgresql_data_dir }}/postgresql.conf"
+- name: Configure master server
+  lineinfile:
+    state: present
+    backrefs: true
+    dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/postgresql.conf"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop: "{{ pgsqlrep_postgres_conf_lines }}"
   notify: restart postgresql
-  become: true
 
-- name: Configure pg_hba.conf for replication
-  template:
-    src: pg_hba.conf.j2
-    dest: "{{ postgresql_data_dir }}/pg_hba.conf"
-  notify: restart postgresql
+- name: Create replication user account
+  postgresql_user:
+    name: "{{ pgsqlrep_user }}"
+    password: "{{ pgsqlrep_password }}"
+    role_attr_flags: replication
   become: true
+  become_user: postgres
+
+- name: Add trust in pg_hba.conf
+  lineinfile:
+    state: present
+    dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/pg_hba.conf"
+    regexp: 'host.*replication.*{{ item }}/32.*trust'
+    line: 'host    replication    {{ pgsqlrep_user }}  {{ item }}/32 trust'
+  loop: "{{ pgsqlrep_replica_address }}"
+  notify: restart postgresql
