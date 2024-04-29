@@ -2,7 +2,6 @@
   lineinfile:
     state: present
     backrefs: true
-    src: "postgresql.conf.j2"
     dest: "{{ postgresql_data_dir }}/postgresql.conf"
     regexp: "{{ item.regexp }}"
     line: "{{ item.line }}"

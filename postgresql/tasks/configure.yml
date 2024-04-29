@@ -10,6 +10,17 @@
   notify: restart postgresql
   become: true
 
+- name: Configure postgresql config if Debian.
+  template:
+    src: "postgresql.conf.j2"
+    dest: "{{ postgresql_config_path }}/postgresql.conf"
+    owner: "{{ postgresql_user }}"
+    group: "{{ postgresql_group }}"
+    mode: 0600
+  notify: restart postgresql
+  when: ansible_os_family == 'Debian'
+  become: true
+
 - name: Configure host based authentication (if entries are configured).
   template:
     src: "pg_hba.conf.j2"
