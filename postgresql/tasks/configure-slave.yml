@@ -61,7 +61,7 @@
     backup: true
     dest: "{{ postgresql_data_dir }}/postgresql.conf"
     regexp: '^#?hot_standby = \w+(\s+#.*)'
-    line: 'hot_standby = yes\1'
+    line: 'hot_standby = on\1'
     backrefs: yes
   become: true
   become_user: postgres
