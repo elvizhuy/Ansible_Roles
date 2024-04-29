@@ -8,6 +8,9 @@
   become_method: sudo
   gather_facts: True
 
+  vars_files:
+    - ./vars/*.yml
+
   tasks:
     - name: Stop and disable PostgreSQL on RedHat
       ansible.builtin.service:
@@ -29,4 +32,16 @@
 
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get remove -y postgresql*
+      when: ansible_os_family == 'Debian'
+
+    - name: Remove PostgreSQL data directory on RedHat
+      ansible.builtin.file:
+        path: "{{ __postgresql_data_dir }}"
+        state: absent
+      when: ansible_os_family == 'RedHat'
+
+    - name: Remove PostgreSQL data directory on Debian
+      ansible.builtin.file:
+        path: "{{ __postgresql_data_dir }}"
+        state: absent
       when: ansible_os_family == 'Debian'
