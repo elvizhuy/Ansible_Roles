@@ -8,13 +8,21 @@
   become_method: sudo
   gather_facts: True
 
-  # vars_files:
-  #   - ./vars/*.yml
-
-  # roles:
-  #   - /etc/ansible/roles/postgresql
-
   tasks:
+    - name: Stop and disable PostgreSQL on RedHat
+      ansible.builtin.service:
+        name: postgresql
+        state: stopped
+        enabled: no
+      when: ansible_os_family == 'RedHat'
+
+    - name: Stop and disable PostgreSQL on Debian
+      ansible.builtin.service:
+        name: postgresql
+        state: stopped
+        enabled: no
+      when: ansible_os_family == 'Debian'
+
     - name: Remove PostgreSQL on RedHat
       ansible.builtin.command: /usr/bin/yum remove -y postgresql*
       when: ansible_os_family == 'RedHat'
