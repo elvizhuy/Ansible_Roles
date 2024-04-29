@@ -30,8 +30,9 @@
   
   command: >
     env PGPASSWORD={{ pgsqlrep_password }}
-    pg_basebackup -X stream -D {{ postgresql_data_dir }}
+    pg_basebackup -P -v -R -X stream -D {{ postgresql_data_dir }}
     -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }}
+    
   # responses:
   #       "Password for user {{ pgsqlrep_user }}:": "{{ pgsqlrep_password }}"
   # environment:
@@ -44,15 +45,15 @@
   become: true
   become_user: postgres
 
-- name: Create recovery.conf
-  template:
-    src: recovery.conf.j2
-    # dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/recovery.conf"
-    dest: "{{ postgresql_data_dir }}/recovery.conf"
-    owner: postgres
-    group: postgres
-    mode: "0644"
-  become: true
+# - name: Create recovery.conf
+#   template:
+#     src: recovery.conf.j2
+#     # dest: "{{ pgsqlrep_data_path[pgsql_major_version] }}/recovery.conf"
+#     dest: "{{ postgresql_data_dir }}/recovery.conf"
+#     owner: postgres
+#     group: postgres
+#     mode: "0644"
+#   become: true
 
 - name: Enable hot standby
   lineinfile:
