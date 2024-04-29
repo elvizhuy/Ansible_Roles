@@ -76,8 +76,6 @@ postgresql_users: []
 # Whether to output user data when managing users.
 postgres_users_no_log: true
 
-pg_port: 5432
-
 pgsqlrep_role: skip
 pgsqlrep_user: replication
 pgsqlrep_password: replication
