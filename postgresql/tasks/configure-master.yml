@@ -36,7 +36,7 @@
   postgresql_user:
     name: "{{ pgsqlrep_user }}"
     password: "{{ pgsqlrep_password }}"
-    role: replication
+    role_attr_flags: replication
   become: true
   become_user: root
   when: ansible_os_family == 'Debian'
