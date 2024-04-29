@@ -1,0 +1,24 @@
+---
+- hosts:
+    - database
+    - database_replica
+  user: "{{ ansible_ssh_user }}"
+  become: true
+  become_user: root
+  become_method: sudo
+  gather_facts: True
+
+  vars_files:
+    - ./vars/*.yml
+
+  roles:
+    - /etc/ansible/roles/postgresql
+
+  tasks:
+    - name: Remove PostgreSQL on RedHat
+      ansible.builtin.command: /usr/bin/yum remove -y postgresql*
+      when: ansible_os_family == 'RedHat'
+
+    - name: Remove PostgreSQL on Debian
+      ansible.builtin.command: /usr/bin/apt-get remove -y postgresql*
+      when: ansible_os_family == 'Debian'
