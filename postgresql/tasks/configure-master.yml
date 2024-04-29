@@ -30,6 +30,7 @@
     role_attr_flags: replication
   become: true
   become_user: postgres
+  when: ansible_os_family == 'RedHat'
 
 - name: Create replication user account if Debian
   postgresql_user:
