@@ -10,6 +10,7 @@
 
   vars_files:
     - ./vars/*.yml
+    - ./tasks/variables.yml
 
   tasks:
     - name: Stop and disable PostgreSQL on RedHat
