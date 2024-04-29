@@ -31,6 +31,15 @@
   become: true
   become_user: postgres
 
+- name: Create replication user account if Debian
+  postgresql_user:
+    name: "{{ pgsqlrep_user }}"
+    password: "{{ pgsqlrep_password }}"
+    role: replication
+  # become: true
+  become_user: postgres
+  when: ansible_os_family == 'Debian'
+
 # - name: Add trust in pg_hba.conf
 #   lineinfile:
 #     state: present
