@@ -33,7 +33,7 @@
     env PGPASSWORD={{ pgsqlrep_password }}
     pg_basebackup -D {{ postgresql_data_dir }}
     -h {{ pgsqlrep_master_address }} -U {{ pgsqlrep_user }}
-    -P -v -R -X stream -C -S saveslot1
+    -P -v -R -X stream -C -S replication_slot
   # responses:
   #       "Password for user {{ pgsqlrep_user }}:": "{{ pgsqlrep_password }}"
   # environment:
