@@ -87,6 +87,7 @@ pgsqlrep_synchronous_commit: local
 pgsqlrep_application_name: awx
 bundle_install: no
 
+
 pgsqlrep_group_name: database_replica
 pgsqlrep_group_name_master: database
 
@@ -110,3 +111,4 @@ pgsqlrep_postgres_conf_lines:
 
   - regexp: '#?synchronous_commit = \w+(\s+#.*)'
     line: 'synchronous_commit = {{ pgsqlrep_synchronous_commit }}\1'
+
