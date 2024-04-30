@@ -13,13 +13,6 @@
     - ./tasks/variables.yml
 
   tasks:
-    - name: Stop and disable PostgreSQL on RedHat
-      ansible.builtin.service:
-        name: postgresql
-        state: stopped
-        enabled: no
-      when: ansible_os_family == 'RedHat'
-
     - name: Stop and disable PostgreSQL on Debian
       ansible.builtin.service:
         name: postgresql
@@ -31,10 +24,6 @@
       ansible.builtin.shell:
         cmd: systemctl unmask postgresql.service
       when: ansible_os_family == 'Debian'
-
-    - name: Remove PostgreSQL on RedHat
-      ansible.builtin.command: /usr/bin/yum remove -y postgresql*
-      when: ansible_os_family == 'RedHat'
 
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
@@ -55,14 +44,6 @@
       ignore_errors: true
       when: ansible_os_family == 'Debian'
 
-    - name: Remove PostgreSQL data directory on RedHat
-      ansible.builtin.file:
-        path: "{{ item }}"
-        state: absent
-      with_items:
-        - /var/lib/pgsql
-      when: ansible_os_family == 'RedHat'
-
     - name: Remove PostgreSQL data directory on Debian
       ansible.builtin.file:
         path: "{{ item }}"
@@ -72,4 +53,27 @@
         - /usr/lib/postgresql/
         - /var/lib/postgresql/
       when: ansible_os_family == 'Debian'
+
+
+# ============================================ RED HAT =============================================
+    - name: Stop and disable PostgreSQL on RedHat
+      ansible.builtin.service:
+        name: postgresql
+        state: stopped
+        enabled: no
+      when: ansible_os_family == 'RedHat'
+
+    - name: Remove PostgreSQL on RedHat
+      ansible.builtin.command: /usr/bin/yum remove -y postgresql*
+      when: ansible_os_family == 'RedHat'
+
+    - name: Remove PostgreSQL data directory on RedHat
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /var/lib/pgsql
+      when: ansible_os_family == 'RedHat'
+
+
 
