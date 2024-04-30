@@ -51,6 +51,7 @@
       retries: 60
       delay: 5
       when: ansible_os_family == 'Debian'
+      depends_on: apt_task
 
 
     - name: Remove PostgreSQL data directory on RedHat
