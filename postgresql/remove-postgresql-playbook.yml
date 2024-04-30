@@ -27,7 +27,7 @@
 
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
-      async: 300
+      async: 3000
       poll: 0
       register: apt_task
       ignore_errors: true
