@@ -24,6 +24,15 @@
   #   mode: "0700"
   become: true
 
+- name: Change listen address on postgresql.conf
+  lineinfile:
+    state: present
+    dest: "{{ postgresql_data_dir }}/postgresql.conf"
+    regexp: '#?#listen_addresses = .*'
+    line: "listen_addresses = '*'"
+  notify: restart postgresql
+  become: true
+
 - name: Create base backup
   # expect:
   # command: |
