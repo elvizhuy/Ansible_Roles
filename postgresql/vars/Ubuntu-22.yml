@@ -8,4 +8,5 @@ __postgresql_packages:
   - postgresql-14
   - postgresql-contrib-14
   - libpq-dev
+  - acl
 postgresql_python_library: python3-psycopg2
