@@ -29,12 +29,13 @@
       shell: ps aux | grep -E '(apt-get|apt|dpkg)'
       register: apt_processes
       changed_when: false
-
+      when: ansible_os_family == 'Debian'
+      
     - name: Kill apt-get, apt, and dpkg processes
       shell: "kill -9 {{ item.split()[1] }}"
       with_items: "{{ apt_processes.stdout_lines }}"
       ignore_errors: true
-      when: apt_processes.stdout_lines | length > 0
+      when: apt_processes.stdout_lines | length > 0 && ansible_os_family == 'Debian'
 
     - name: Configure dpkg
       become: true
