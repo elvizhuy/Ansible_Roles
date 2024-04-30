@@ -29,7 +29,10 @@
 
     - name: Unmask PostgreSQL service on Debian
       ansible.builtin.shell:
-        cmd: systemctl unmask postgresql.service
+        cmd: "{{ item }}"
+      with_items:
+        - systemctl unmask postgresql.service
+        - rm /var/lib/dpkg/lock-frontend
       when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL on RedHat
