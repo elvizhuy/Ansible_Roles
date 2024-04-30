@@ -43,6 +43,18 @@
 
     - name: Remove PostgreSQL data directory on Debian
       ansible.builtin.file:
-        path: "{{ postgresql_data_dir }}"
+        path: "/etc/postgresql/"
+        state: absent
+      when: ansible_os_family == 'Debian'
+
+    - name: Remove PostgreSQL bin directory on Debian
+      ansible.builtin.file:
+        path: "/usr/lib/postgresql/"
+        state: absent
+      when: ansible_os_family == 'Debian'
+
+    - name: Remove PostgreSQL config directory on Debian
+      ansible.builtin.file:
+        path: "/var/lib/postgresql/"
         state: absent
       when: ansible_os_family == 'Debian'
