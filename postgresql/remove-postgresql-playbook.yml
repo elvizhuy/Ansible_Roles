@@ -41,6 +41,7 @@
       async: 300
       poll: 0
       register: apt_task
+      ignore_errors: true
       when: ansible_os_family == 'Debian'
 
     - name: Wait for apt-get to complete
@@ -51,6 +52,7 @@
       until: apt_result.finished
       retries: 60
       delay: 5
+      ignore_errors: true
       when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL data directory on RedHat
