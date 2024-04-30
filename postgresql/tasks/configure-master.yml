@@ -10,6 +10,15 @@
   become: true
   when: ansible_os_family == 'Debian'
 
+- name: Change listen address on postgresql.conf
+  lineinfile:
+    state: present
+    dest: "{{ postgresql_config_path }}/postgresql.conf"
+    regexp: '#?#listen_addresses = .*'
+    line: "listen_addresses = '*'"
+  notify: restart postgresql
+  become: true
+
 - name: Configure master server for Redhat,Centos
   lineinfile:
     state: present
