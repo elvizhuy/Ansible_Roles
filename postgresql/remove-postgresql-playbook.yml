@@ -29,10 +29,7 @@
 
     - name: Unmask PostgreSQL service on Debian
       ansible.builtin.shell:
-        cmd: "{{ item }}"
-      with_items:
-        - systemctl unmask postgresql.service
-        - rm /var/lib/dpkg/lock-frontend
+        cmd: systemctl unmask postgresql.service
       when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL on RedHat
@@ -41,7 +38,20 @@
 
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
+      async: 300
+      poll: 0
+      register: apt_task
       when: ansible_os_family == 'Debian'
+
+    - name: Wait for apt-get to complete
+      ansible.builtin.async_status:
+        jid: "{{ apt_task.ansible_job_id }}"
+      register: apt_result
+      until: apt_result.finished
+      retries: 60
+      delay: 5
+      when: ansible_os_family == 'Debian'
+
 
     - name: Remove PostgreSQL data directory on RedHat
       ansible.builtin.file:
