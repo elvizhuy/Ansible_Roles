@@ -28,9 +28,8 @@
       when: ansible_os_family == 'Debian'
 
     - name: Unmask PostgreSQL service on Debian
-      ansible.builtin.systemd:
-        name: postgresql.service
-        state: unmasked
+      ansible.builtin.shell:
+        cmd: systemctl unmask postgresql.service
       when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL on RedHat
