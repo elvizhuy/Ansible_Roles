@@ -36,6 +36,11 @@
       ignore_errors: true
       when: apt_processes.stdout_lines | length > 0
 
+    - name: Configure dpkg
+      become: true
+      shell: dpkg --configure -a
+      ignore_errors: true
+
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
       async: 3000
