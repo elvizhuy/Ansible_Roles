@@ -51,8 +51,15 @@
       retries: 60
       delay: 5
       when: ansible_os_family == 'Debian'
-      depends_on: apt_task
 
+    - name: Check if PostgreSQL removal is complete
+      ansible.builtin.async_poll:
+        jid: "{{ apt_task.ansible_job_id }}"
+      register: apt_poll_result
+      until: apt_poll_result.finished
+      retries: 60
+      delay: 5
+      when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL data directory on RedHat
       ansible.builtin.file:
