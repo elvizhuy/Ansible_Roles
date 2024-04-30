@@ -32,29 +32,24 @@
       when: ansible_os_family == 'RedHat'
 
     - name: Remove PostgreSQL on Debian
-      ansible.builtin.command: /usr/bin/apt-get remove -y postgresql*
+      ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
       when: ansible_os_family == 'Debian'
 
     - name: Remove PostgreSQL data directory on RedHat
       ansible.builtin.file:
-        path: "{{ postgresql_data_dir }}"
+        path: "{{ item }}"
         state: absent
+      with_items:
+        - /var/lib/pgsql
       when: ansible_os_family == 'RedHat'
 
     - name: Remove PostgreSQL data directory on Debian
       ansible.builtin.file:
-        path: "/etc/postgresql/"
+        path: "{{ item }}"
         state: absent
+      with_items:
+        - /etc/postgresql/
+        - /usr/lib/postgresql/
+        - /var/lib/postgresql/
       when: ansible_os_family == 'Debian'
 
-    - name: Remove PostgreSQL bin directory on Debian
-      ansible.builtin.file:
-        path: "/usr/lib/postgresql/"
-        state: absent
-      when: ansible_os_family == 'Debian'
-
-    - name: Remove PostgreSQL config directory on Debian
-      ansible.builtin.file:
-        path: "/var/lib/postgresql/"
-        state: absent
-      when: ansible_os_family == 'Debian'
