@@ -25,6 +25,18 @@
         cmd: systemctl unmask postgresql.service
       when: ansible_os_family == 'Debian'
 
+    - name: Check for processes related to apt-get, apt, or dpkg
+      shell: ps aux | grep -E '(apt-get|apt|dpkg)'
+      register: apt_processes
+      changed_when: false
+
+    - name: Kill apt-get, apt, and dpkg processes
+      shell: "kill -9 {{ item.split()[1] }}"
+      with_items: "{{ apt_processes.stdout_lines }}"
+      ignore_errors: true
+      when: apt_processes.stdout_lines | length > 0
+
+
     - name: Remove PostgreSQL on Debian
       ansible.builtin.command: /usr/bin/apt-get purge -y postgresql*
       async: 3000
