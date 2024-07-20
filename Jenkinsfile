@@ -27,6 +27,7 @@ pipeline {
                         echo "------------ CLONE PROJECT ------------"
                         echo "Git repository does not exist. Cloning..."
                     }
+                    echo "------------- DONE -------------"
                 }
             }
         }
@@ -36,7 +37,6 @@ pipeline {
                 pwd()
                 sh 'ls -la'
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: env.PLAYBOOK_REPO]]])
-                sh 'git pull'
             }
         }
 
