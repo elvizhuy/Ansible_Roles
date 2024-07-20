@@ -5,7 +5,7 @@ pipeline {
         ANSIBLE_DIR = '/etc/ansible/Ansible_Roles'
         GIT_USER = 'elvizhuy'
         GIT_DIR = 'Ansible_Roles'
-        PLAYBOOK_REPO = 'https://github.com/${GIT_USER}/${ANSIBLE_DIR}.git'
+        PLAYBOOK_REPO = 'https://github.com/${GIT_USER}/${GIT_DIR}.git'
         INVENTORY_HAPROXY_FILE = "${ANISBLE_DIR}/haproxy/inventory/inventory.yml"
         INVENTORY_KEEPALIVED_FILE = "${ANISBLE_DIR}/keepalived/inventory/inventory.yml"
         ANSIBLE_SERVER = 'isofh@10.0.50.30'
