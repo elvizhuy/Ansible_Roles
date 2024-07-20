@@ -6,7 +6,7 @@
         name: haproxy
         tasks_from: clear.yml
       when:
-        - role == 'Haproxy'
+        - role == 'haproxy'
         - action == 'clear'
 
     - name: Include Keepalived clear tasks
@@ -14,20 +14,20 @@
         name: keepalived
         tasks_from: clear.yml
       when:
-        - role == 'Keepalived'
+        - role == 'keepalived'
         - action == 'clear'
 
     - name: Include HAProxy install tasks
       include_role:
         name: haproxy
       when:
-        - role == 'Haproxy'
+        - role == 'haproxy'
         - action == 'install'
 
     - name: Include Keepalived install tasks
       include_role:
         name: keepalived
       when:
-        - role == 'Keepalived'
+        - role == 'keepalived'
         - action == 'install'
 
