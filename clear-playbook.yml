@@ -1,0 +1,5 @@
+- hosts: "{{ project }}"
+  become: yes
+  roles:
+    - { role: haproxy, tags: ['haproxy'] }
+    - { role: keepalived, tags: ['keepalived'] }

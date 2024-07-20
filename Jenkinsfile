@@ -15,6 +15,7 @@ pipeline {
     parameters {
         choice(choices: ["Haproxy","Keepalived"], description: 'Choose Role', name: 'role')
         choice(choices: ["bvp"], description: 'Choose Project', name: 'project')
+        choice(choices: ["install", "clear"], description: 'Choose Action', name: 'action')
     }
 
     stages {
@@ -63,6 +64,9 @@ pipeline {
                 script {
                     def inventoryFile = "${ANSIBLE_DIR}/${params.role.toLowerCase()}/inventory/inventory.yml"
                     def playbookFile = "${ANSIBLE_DIR}/${params.role.toLowerCase()}/${params.role.toLowerCase()}-playbook.yml"
+                    if (params.action == 'clear') {
+                        playbookFile = "${ANSIBLE_DIR}/clear-playbook.yml"
+                    }
                     echo "Running playbook for role: ${params.role}, project: ${params.project}"
                     
                     sshagent(credentials: ['ansible-server-ssh']) {
