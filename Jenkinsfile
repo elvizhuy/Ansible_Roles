@@ -16,7 +16,7 @@ pipeline {
             steps {
                  script {
                     echo "------------ CLONE OR PULL CODE ------------"
-                    def workspace = pwd() 
+                    def workspace = "/var/lib/jenkins/workspace/" 
                     def gitDir = "${workspace}/${GIT_DIR}"
                     
                     if (fileExists(gitDir)) {
