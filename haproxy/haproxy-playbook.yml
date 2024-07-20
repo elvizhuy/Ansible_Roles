@@ -1,4 +1,4 @@
-- hosts: {{ project }}
+- hosts: "{{ project }}"
   become: yes
   roles:
     - haproxy
