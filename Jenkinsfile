@@ -41,7 +41,7 @@ pipeline {
         // }
 
         stage('Choose Ansible Roles') {
-            when { expression { params.role != null && params.role != '' }}
+            when { expression { params.role != null && params.role != '' && params.action != ''}}
             steps {
                script {
                     echo "------------ CHECKOUT ANSIBLE ROLES ------------"
