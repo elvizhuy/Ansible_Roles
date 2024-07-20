@@ -1,15 +1,33 @@
 - hosts: "{{ project }}"
   become: yes
   tasks:
-    - name: Include HAProxy role
+    - name: Include HAProxy clear tasks
       include_role:
         name: haproxy
         tasks_from: clear.yml
-      when: role == 'Haproxy'
+      when:
+        - role == 'Haproxy'
+        - action == 'clear'
 
-    - name: Include Keepalived role
+    - name: Include Keepalived clear tasks
       include_role:
         name: keepalived
         tasks_from: clear.yml
-      when: role == 'Keepalived'
+      when:
+        - role == 'Keepalived'
+        - action == 'clear'
+
+    - name: Include HAProxy install tasks
+      include_role:
+        name: haproxy
+      when:
+        - role == 'Haproxy'
+        - action == 'install'
+
+    - name: Include Keepalived install tasks
+      include_role:
+        name: keepalived
+      when:
+        - role == 'Keepalived'
+        - action == 'install'
 
