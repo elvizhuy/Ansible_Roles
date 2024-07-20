@@ -1,0 +1,13 @@
+- name: Update Keepalived configuration
+  template:
+    src: keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify:
+    - Restart Keepalived
+  become: true
+
+- name: Restart Keepalived
+  service:
+    name: keepalived
+    state: restarted
+  become: true

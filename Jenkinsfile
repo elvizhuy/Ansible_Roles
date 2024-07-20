@@ -15,7 +15,7 @@ pipeline {
     parameters {
         choice(choices: ["Haproxy","Keepalived"], description: 'Choose Role', name: 'role')
         choice(choices: ["bvp"], description: 'Choose Project', name: 'project')
-        choice(choices: ["install", "clear"], description: 'Choose Action', name: 'action')
+        choice(choices: ["update-config","install", "clear"], description: 'Choose Action', name: 'action')
     }
 
     stages {
@@ -66,6 +66,8 @@ pipeline {
                     def playbookFile = "${ANSIBLE_DIR}/${params.role.toLowerCase()}/${params.role.toLowerCase()}-playbook.yml"
                     if (params.action == 'clear') {
                         playbookFile = "${ANSIBLE_DIR}/clear-playbook.yml"
+                    }else if (params.action == 'update-config') {
+                        playbookFile = "${ANSIBLE_DIR}/update-config-playbook.yml"
                     }
                     echo "Running playbook for role: ${params.role}, project: ${params.project}, action: ${params.action}"
                     
