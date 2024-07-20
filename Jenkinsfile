@@ -17,7 +17,7 @@ pipeline {
                  script {
                     echo "------------ CLONE OR PULL CODE ------------"
                     def workspace = pwd() 
-                    def gitDir = "${workspace}/${GIT_DIR}/.git"
+                    def gitDir = "${workspace}/${GIT_DIR}"
                     
                     if (fileExists(gitDir)) {
                         echo "Git repository exists. Pulling changes..."
