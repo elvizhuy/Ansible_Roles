@@ -16,7 +16,7 @@ pipeline {
             steps {
                  script {
                     echo "------------ CLONE OR PULL CODE ------------"
-                    def workspace = "/var/lib/jenkins/workspace/Ansible-Playbook-Execution/" 
+                    def workspace = "/var/lib/jenkins/workspace/" 
                     def gitDir = "${workspace}/${GIT_DIR}"
                     
                     if (fileExists(gitDir)) {
