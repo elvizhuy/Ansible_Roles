@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: bvp
   become: yes
   roles:
     - haproxy
