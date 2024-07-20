@@ -37,7 +37,7 @@ pipeline {
             steps {
                 pwd()
                 sh 'ls -la'
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: env.PLAYBOOK_REPO]]])
+                // checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: env.PLAYBOOK_REPO]]])
             }
         }
 
