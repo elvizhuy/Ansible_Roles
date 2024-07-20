@@ -1,4 +1,4 @@
-- hosts: bvp
+- hosts: {{ project }}
   become: yes
   roles:
     - keepalived
