@@ -5,7 +5,7 @@ all:
         bvp_keepalived_servers:
           hosts:
             10.0.50.26:
-            10.0.50.153:
+            10.0.50.28:
     ndtp:
       children:
         ndtp_keepalived_servers:
