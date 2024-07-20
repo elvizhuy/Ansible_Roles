@@ -52,6 +52,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${ANSIBLE_SERVER} "cd ${ANSIBLE_DIR} && ${GIT_CONFIG} ${ANSIBLE_DIR} && git pull"
                         """
                     }
+                    
                     echo "------------- DONE -------------"
                 }
             }
@@ -66,7 +67,7 @@ pipeline {
                     
                     sshagent(credentials: ['ansible-server-ssh']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${ANSIBLE_SERVER} 'cd ${ANSIBLE_DIR}/${params.role.toLowerCase()} && git pull && ansible-playbook -i ${inventoryFile} ${playbookFile} --extra-vars "project=${params.project}"'
+                        ssh -o StrictHostKeyChecking=no ${ANSIBLE_SERVER} "cd ${ANSIBLE_DIR}/${params.role.toLowerCase()} && ansible-playbook -i ${inventoryFile} ${playbookFile} --extra-vars 'project=${params.project}'"
                         """
                     }
                 }

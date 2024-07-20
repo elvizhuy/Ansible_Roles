@@ -1,0 +1,14 @@
+- name: Install HAProxy on Debian-based systems
+  apt:
+    name: "{{ haproxy_pkg }}"
+    state: present
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Install HAProxy on Red Hat-based systems
+  yum:
+    name: "{{ haproxy_pkg }}"
+    state: present
+    use_backend: "{{ 'yum' if ansible_facts['yum_version'] is version('3', '<') else 'dnf' }}"
+  when: ansible_os_family == "RedHat"
+  become: true
