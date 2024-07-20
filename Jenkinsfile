@@ -22,7 +22,8 @@ pipeline {
                     if (fileExists(gitDir)) {
                         echo "Git repository exists. Pulling changes..."
                         echo "------------ PULL CODE ------------"
-                        sh "cd ${workspace}/${GIT_DIR} && git config --global --add safe.directory /var/lib/jenkins/workspace/Ansible-Playbook-Execution/Ansible-Inventory-Playbook && git pull"
+                        sh "cd ${workspace}/${GIT_DIR} && git config --global --add safe.directory ${workspace}/${GIT_DIR} && git pull"
+                        // /var/lib/jenkins/workspace/Ansible-Playbook-Execution/
                     } else {
                         echo "------------ CLONE PROJECT ------------"
                         echo "Git repository does not exist. Cloning..."
