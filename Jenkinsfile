@@ -4,6 +4,7 @@ pipeline {
     environment {
         ANSIBLE_DIR = '/etc/ansible/Ansible_Roles'
         GIT_USER = 'elvizhuy'
+        GIT_DIR = 'Ansible_Roles'
         PLAYBOOK_REPO = 'https://github.com/${GIT_USER}/${ANSIBLE_DIR}.git'
         INVENTORY_HAPROXY_FILE = "${ANISBLE_DIR}/haproxy/inventory/inventory.yml"
         INVENTORY_KEEPALIVED_FILE = "${ANISBLE_DIR}/keepalived/inventory/inventory.yml"
@@ -11,6 +12,25 @@ pipeline {
     }
 
     stages {
+        stage ('Clone or Pull Project') {
+            steps {
+                 script {
+                    echo "------------ CLONE OR PULL CODE ------------"
+                    def workspace = pwd() 
+                    def gitDir = "${workspace}/${GIT_DIR}/.git"
+                    
+                    if (fileExists(gitDir)) {
+                        echo "Git repository exists. Pulling changes..."
+                        echo "------------ PULL CODE ------------"
+                        sh "cd ${workspace}/${GIT_DIR} && git config --global --add safe.directory /var/lib/jenkins/workspace/Ansible-Playbook-Execution/Ansible-Inventory-Playbook && git pull"
+                    } else {
+                        echo "------------ CLONE PROJECT ------------"
+                        echo "Git repository does not exist. Cloning..."
+                    }
+                }
+            }
+        }
+
         stage('Checkout Ansible Roles') {
             steps {
                 pwd()
