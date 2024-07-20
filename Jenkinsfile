@@ -13,7 +13,9 @@ pipeline {
     stages {
         stage('Checkout Ansible Roles') {
             steps {
+                pwd()
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: env.PLAYBOOK_REPO]]])
+                sh 'git pull'
             }
         }
 
