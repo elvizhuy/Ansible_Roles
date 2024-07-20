@@ -67,11 +67,11 @@ pipeline {
                     if (params.action == 'clear') {
                         playbookFile = "${ANSIBLE_DIR}/clear-playbook.yml"
                     }
-                    echo "Running playbook for role: ${params.role}, project: ${params.project}"
+                    echo "Running playbook for role: ${params.role}, project: ${params.project}, action: ${params.action}"
                     
                     sshagent(credentials: ['ansible-server-ssh']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${ANSIBLE_SERVER} "cd ${ANSIBLE_DIR}/${params.role.toLowerCase()} && ansible-playbook -i ${inventoryFile} ${playbookFile} --extra-vars 'project=${params.project}'"
+                        ssh -o StrictHostKeyChecking=no ${ANSIBLE_SERVER} "cd ${ANSIBLE_DIR}/${params.role.toLowerCase()} && ansible-playbook -i ${inventoryFile} ${playbookFile} --extra-vars 'project=${params.project} role=${params.role}'"
                         """
                     }
                 }

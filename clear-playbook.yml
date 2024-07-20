@@ -1,5 +1,15 @@
 - hosts: "{{ project }}"
   become: yes
-  roles:
-    - { role: haproxy, tags: ['haproxy'] }
-    - { role: keepalived, tags: ['keepalived'] }
+  tasks:
+    - name: Include HAProxy role
+      include_role:
+        name: haproxy
+        tasks_from: clear.yml
+      when: role == 'Haproxy'
+
+    - name: Include Keepalived role
+      include_role:
+        name: keepalived
+        tasks_from: clear.yml
+      when: role == 'Keepalived'
+
