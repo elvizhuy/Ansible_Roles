@@ -14,7 +14,7 @@
   template:
     src: "keepalived_master.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['ansible_default_ipv4']['address'] == '10.0.50.26'
+  when: hostvars[inventory_hostname].role == 'master'
   notify:
     - Restart Keepalived
   become: true
@@ -23,7 +23,7 @@
   template:
     src: "keepalived_slave.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['ansible_default_ipv4']['address'] == '10.0.50.28'
+  when: hostvars[inventory_hostname].role == 'slave'
   notify:
     - Restart Keepalived
   become: true
