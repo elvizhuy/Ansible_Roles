@@ -11,3 +11,8 @@
     name: keepalived
     state: restarted
   become: true
+
+- name: Display Keepalived status
+  command: systemctl status keepalived
+  register: keepalived_status
+  become: true
