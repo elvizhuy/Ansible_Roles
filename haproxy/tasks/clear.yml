@@ -39,7 +39,6 @@
   file:
     path: /etc/haproxy
     state: absent
-    recurse: true
   become: true
 
 - name: Remove HAProxy log directory
