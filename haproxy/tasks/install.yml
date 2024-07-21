@@ -12,3 +12,23 @@
     use_backend: "{{ 'yum' if ansible_facts['yum_version'] is version('3', '<') else 'dnf' }}"
   when: ansible_os_family == "RedHat"
   become: true
+
+- name: Create certs directory for HAProxy on Debian-based systems
+  file:
+    path: /etc/haproxy/certs
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Create certs directory for HAProxy on Red Hat-based systems
+  file:
+    path: /etc/haproxy/certs
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ansible_os_family == "RedHat"
+  become: true
