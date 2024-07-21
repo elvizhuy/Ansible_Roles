@@ -13,10 +13,20 @@
   when: ansible_os_family == "RedHat"
   become: true
 
-- name: Copy Keepalived configuration
+- name: Copy Keepalived configuration for MASTER
   template:
-    src: "{{ role_path }}/templates/keepalived.conf.j2"
+    src: "keepalived_master.conf.j2"
     dest: /etc/keepalived/keepalived.conf
+  when: hostvars[inventory_hostname]['role'] == 'master'
+  notify:
+    - Restart Keepalived
+  become: true
+
+- name: Copy Keepalived configuration for SLAVE
+  template:
+    src: "keepalived_slave.conf.j2"
+    dest: /etc/keepalived/keepalived.conf
+  when: hostvars[inventory_hostname]['role'] == 'slave'
   notify:
     - Restart Keepalived
   become: true

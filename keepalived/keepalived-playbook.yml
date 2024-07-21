@@ -1,4 +1,5 @@
 - hosts: "{{ project }}"
   become: yes
   roles:
-    - keepalived
+    - role: keepalived
+      tasks_from: install.yml
