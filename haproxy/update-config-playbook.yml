@@ -7,10 +7,10 @@
       include_role:
         name: haproxy
         tasks_from: configure.yml
-      when: role == 'haproxy'
+      when: role == 'Haproxy' and action == 'update'
 
     - name: Include Keepalived configuration tasks
       include_role:
         name: keepalived
         tasks_from: configure.yml
-      when: role == 'keepalived'
+      when: role == 'Keepalived' and action == 'update'

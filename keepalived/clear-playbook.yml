@@ -1,0 +1,15 @@
+- hosts: "{{ project }}"
+  become: yes
+  vars:
+    role: "{{ role }}"
+    action: "{{ action }}"
+  tasks:
+    - name: Include Keepalived clear tasks
+      include_role:
+        name: keepalived
+        tasks_from: clear.yml
+      when:
+        - role == 'Keepalived'
+        - action == 'clear'
+
+
