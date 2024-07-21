@@ -12,3 +12,14 @@
     use_backend: "{{ 'yum' if ansible_facts['yum_version'] is version('3', '<') else 'dnf' }}"
   when: ansible_os_family == "RedHat"
   become: true
+
+- name: Display Keepalived status
+  ansible.builtin.shell: |
+    systemctl status keepalived | cat
+  register: keepalived_status
+  become: true
+
+- name: Show Keepalived status output
+  debug:
+    msg: |
+      {{ keepalived_status.stdout }}
