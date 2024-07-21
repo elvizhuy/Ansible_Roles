@@ -2,18 +2,18 @@
 - name: Print IP address for MASTER
   debug:
     msg: "MASTER IP: {{ inventory_hostname }}"
-  when: hostvars[inventory_hostname]['role'] == 'master'
+  when: hostvars[inventory_hostname].role == 'master'
 
 - name: Print IP address for SLAVE
   debug:
     msg: "SLAVE IP: {{ inventory_hostname }}"
-  when: hostvars[inventory_hostname]['role'] == 'slave'
+  when: hostvars[inventory_hostname].role == 'slave'
 
 - name: Apply Keepalived configuration for MASTER
   template:
     src: "keepalived_master.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['role'] == 'master'
+  when: hostvars[inventory_hostname].role == 'master'
   notify:
     - Restart Keepalived
   become: true
@@ -22,7 +22,7 @@
   template:
     src: "keepalived_slave.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['role'] == 'slave'
+  when: hostvars[inventory_hostname].role == 'slave'
   notify:
     - Restart Keepalived
   become: true
