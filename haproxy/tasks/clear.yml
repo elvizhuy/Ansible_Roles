@@ -1,4 +1,3 @@
----
 - name: Stop HAProxy service
   service:
     name: haproxy
@@ -10,6 +9,11 @@
     name: haproxy
     enabled: no
   become: true
+
+- name: Mask HAProxy service
+  command: systemctl mask haproxy
+  become: true
+  ignore_errors: true
 
 - name: Remove HAProxy package on Debian-based systems
   apt:
@@ -30,4 +34,23 @@
   file:
     path: /etc/haproxy
     state: absent
+    recurse: yes
+  become: true
+
+- name: Remove HAProxy systemd service file on Debian-based systems
+  file:
+    path: /lib/systemd/system/haproxy.service
+    state: absent
+  when: ansible_os_family == "Debian"
+  become: true
+
+- name: Remove HAProxy systemd service file on Red Hat-based systems
+  file:
+    path: /usr/lib/systemd/system/haproxy.service
+    state: absent
+  when: ansible_os_family == "RedHat"
+  become: true
+
+- name: Reload systemd daemon
+  command: systemctl daemon-reload
   become: true
