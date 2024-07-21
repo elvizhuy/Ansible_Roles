@@ -39,19 +39,19 @@
     patterns: "*.pem"
   register: pem_files
 
-- name: Check if bvptw.vn.pem exists in project-specific files directory
+- name: Check if ndtp.org.pem exists in project-specific files directory
   stat:
-    path: "{{ role_path }}/files/{{ project }}/bvptw.vn.pem"
-  register: bvptw_pem
+    path: "{{ role_path }}/files/{{ project }}/ndtp.org.pem"
+  register: ndtp_pem
 
-- name: Copy bvptw.vn.pem to project directory
+- name: Copy ndtp.org.pem to project directory
   copy:
-    src: "{{ role_path }}/files/{{ project }}/bvptw.vn.pem"
-    dest: "/etc/haproxy/certs/bvptw.vn.pem"
+    src: "{{ role_path }}/files/{{ project }}/ndtp.org.pem"
+    dest: "/etc/haproxy/certs/ndtp.org.pem"
     owner: root
     group: root
     mode: '0644'
-  when: bvptw_pem.stat.exists and pem_files.matched == 0
+  when: ndtp_pem.stat.exists and pem_files.matched == 0
   become: true
 
 - name: Update HAProxy configuration
