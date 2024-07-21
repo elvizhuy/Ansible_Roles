@@ -80,6 +80,9 @@
   become: true
 
 - name: Ensure HAProxy is not running
-  command: pkill -f haproxy
+  shell: |
+    if pgrep haproxy; then
+      pkill -f haproxy
+    fi
   become: true
   ignore_errors: true
