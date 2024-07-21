@@ -82,8 +82,8 @@ frontend  https_in
 	acl host_ttb_api  hdr(host)            -i   ttb-api.bvptw.vn
             use_backend backend_ttb_api          if host_ttb_api
 
-	acl host_pacsdc  hdr(host)            -i   pacsdc.bvptw.vn
-            use_backend backend_pacsdc            if host_pacsdc
+#	acl host_pacsdc  hdr(host)            -i   pacsdc.bvptw.vn
+#            use_backend backend_pacsdc            if host_pacsdc
 	acl host_pacsnondc  hdr(host)            -i   pacsnondc.bvptw.vn
             use_backend backend_pacsnondc          if host_pacsnondc
 
