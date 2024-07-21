@@ -15,11 +15,6 @@
     enabled: no
   become: true
 
-# - name: Mask HAProxy service
-#   command: systemctl mask haproxy
-#   become: true
-#   ignore_errors: true
-
 - name: Remove HAProxy package on Debian-based systems
   apt:
     name: haproxy
@@ -53,6 +48,12 @@
     state: absent
   become: true
 
+- name: Remove HAProxy binary
+  file:
+    path: /usr/sbin/haproxy
+    state: absent
+  become: true
+
 - name: Remove HAProxy systemd service file on Debian-based systems
   file:
     path: /lib/systemd/system/haproxy.service
@@ -77,3 +78,8 @@
 - name: Reload systemd daemon
   command: systemctl daemon-reload
   become: true
+
+- name: Ensure HAProxy is not running
+  command: pkill -f haproxy
+  become: true
+  ignore_errors: true
