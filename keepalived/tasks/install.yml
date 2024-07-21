@@ -13,6 +13,14 @@
   when: ansible_os_family == "RedHat"
   become: true
 
+- name: Copy Keepalived configuration
+  template:
+    src: /templates/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  notify:
+    - Restart Keepalived
+  become: true
+
 - name: Display Keepalived status
   ansible.builtin.shell: |
     systemctl status keepalived | cat
