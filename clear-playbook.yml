@@ -1,5 +1,7 @@
 - hosts: "{{ project }}"
   become: yes
+  vars:
+    role: "{{ role }}"
   tasks:
     - name: Include HAProxy clear tasks
       include_role:
