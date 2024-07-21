@@ -299,38 +299,6 @@ backend backend_signer
                 server s40 10.0.30.40:2391 check cookie s40
                 server s41 10.0.30.41:2391 check cookie s41
 
-backend backend_nckh
-        mode http
-        balance leastconn
-        option httpclose
-        option forwardfor
-        cookie JSESSIONID prefix
-                server s30 10.0.30.30:2389 check cookie s30
-
-backend backend_nckh-api
-        mode http
-        balance leastconn
-        option httpclose
-        option forwardfor
-        cookie JSESSIONID prefix
-                server s30 10.0.30.30:8082 check cookie s30
-
-backend backend_ttdh-api
-        mode http
-        balance leastconn
-        option httpclose
-        option forwardfor
-        cookie JSESSIONID prefix
-                server s30 10.0.30.30:2301 check cookie s30
-
-backend backend_ttdh
-        mode http
-        balance leastconn
-        option httpclose
-        option forwardfor
-        cookie JSESSIONID prefix
-                server s30 10.0.30.30:2398 check cookie s30
-
 backend backend_his
         mode http
         balance roundrobin
@@ -350,7 +318,6 @@ backend backend_his
                 server s33_82 10.0.30.33:8082 check cookie s33_82
 
 backend backend_his2
-
         mode http
         balance leastconn
         option httpclose
