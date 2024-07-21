@@ -3,10 +3,10 @@
   vars:
     role: "{{ role }}"
     action: "{{ action }}"
-    role_lower: "{{ role | lower }}"
+    # role_lower: "{{ role | lower }}"
   tasks:
     - name: Include HAProxy clear tasks
-      include_tasks: "{{ role_lower }}/tasks/clear.yml"
+      include_tasks: "/tasks/clear.yml"
       # include_role:
       #   name: haproxy
       #   tasks_from: clear.yml
