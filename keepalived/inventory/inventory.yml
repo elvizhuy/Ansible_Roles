@@ -1,14 +1,8 @@
 all:
   children:
-    bvp:
+    dhy:
       children:
-        bvp_keepalived_servers:
-          hosts:
-            10.0.50.26:
-            10.0.50.28:
-    ndtp:
-      children:
-        ndtp_keepalived_servers:
+        dhy_keepalived_servers:
           hosts:
             10.0.0.1:
             10.0.0.2:

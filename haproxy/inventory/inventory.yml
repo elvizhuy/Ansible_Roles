@@ -1,14 +1,8 @@
 all:
   children:
-    bvp:
+    dhy:
       children:
-        bvp_haproxy_servers:
-          hosts:
-            10.0.50.26:
-            10.0.50.28:
-    ndtp:
-      children:
-        ndtp_haproxy_servers:
+        dhy_haproxy_servers:
           hosts:
             10.0.0.1:
             10.0.0.2:
