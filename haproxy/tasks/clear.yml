@@ -34,7 +34,6 @@
   file:
     path: /etc/haproxy
     state: absent
-    recurse: yes
   become: true
 
 - name: Remove HAProxy systemd service file on Debian-based systems
