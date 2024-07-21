@@ -45,14 +45,12 @@
   file:
     path: /var/log/haproxy
     state: absent
-    recurse: true
   become: true
 
 - name: Remove HAProxy run directory
   file:
     path: /run/haproxy
     state: absent
-    recurse: true
   become: true
 
 - name: Remove HAProxy systemd service file on Debian-based systems
