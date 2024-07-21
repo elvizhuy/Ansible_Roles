@@ -1,7 +1,13 @@
 ---
-- name: Print all host variables
+- name: Print IP address for MASTER
   debug:
-    var: hostvars[inventory_hostname]
+    msg: "MASTER IP: {{ inventory_hostname }}"
+  when: hostvars[inventory_hostname]['role'] == 'master'
+
+- name: Print IP address for SLAVE
+  debug:
+    msg: "SLAVE IP: {{ inventory_hostname }}"
+  when: hostvars[inventory_hostname]['role'] == 'slave'
 
 - name: Apply Keepalived configuration for MASTER
   template:
