@@ -1,8 +1,5 @@
 ---
-- name: Print host variables
-  debug:
-    var: hostvars[inventory_hostname]
-    
+
 - name: Print IP address for MASTER
   debug:
     msg: "MASTER IP: {{ inventory_hostname }}"
@@ -17,7 +14,7 @@
   template:
     src: "keepalived_master.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname].role == 'master'
+  when: hostvars[inventory_hostname]['ansible_default_ipv4']['address'] == '10.0.50.26'
   notify:
     - Restart Keepalived
   become: true
@@ -26,7 +23,7 @@
   template:
     src: "keepalived_slave.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname].role == 'slave'
+  when: hostvars[inventory_hostname]['ansible_default_ipv4']['address'] == '10.0.50.28'
   notify:
     - Restart Keepalived
   become: true
