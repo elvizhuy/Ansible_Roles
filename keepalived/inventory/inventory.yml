@@ -5,5 +5,7 @@ all:
         bvp_keepalived_servers:
           hosts:
             10.0.50.26:
+              role: master
             10.0.50.28:
+              role: slave
 

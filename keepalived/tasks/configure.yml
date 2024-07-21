@@ -1,7 +1,9 @@
-- name: Update Keepalived configuration
+- name: Apply Keepalived Configuration
   template:
-    src: keepalived.conf.j2
+    src: "{{ item }}.conf.j2"
     dest: /etc/keepalived/keepalived.conf
+  with_items:
+    - "{{ 'keepalived_master' if hostvars[inventory_hostname]['role'] == 'master' else 'keepalived_slave' }}"
   notify:
     - Restart Keepalived
   become: true
