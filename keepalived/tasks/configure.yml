@@ -1,4 +1,8 @@
 ---
+- name: Print host variables
+  debug:
+    var: hostvars[inventory_hostname]
+    
 - name: Print IP address for MASTER
   debug:
     msg: "MASTER IP: {{ inventory_hostname }}"
