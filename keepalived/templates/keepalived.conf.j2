@@ -12,6 +12,8 @@ vrrp_script chk_haproxy {
 vrrp_script chk_proxyip55 {
     script "/bin/ping -c 1 -w 1 10.0.30.26"
     interval 2
+    fall 2
+    rise 2
 }
 
 vrrp_instance VI_1 {
@@ -63,4 +65,3 @@ vrrp_instance VI_2 {
         chk_proxyip55
     }
 }
-
