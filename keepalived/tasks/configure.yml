@@ -1,3 +1,8 @@
+---
+- name: Print all host variables
+  debug:
+    var: hostvars[inventory_hostname]
+
 - name: Apply Keepalived configuration for MASTER
   template:
     src: "keepalived_master.conf.j2"
