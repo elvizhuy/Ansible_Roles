@@ -9,9 +9,7 @@
       # include_role:
       #   name: haproxy
       #   tasks_from: clear.yml
-      when:
-        - role == 'Haproxy'
-        - action == 'clear'
+      when: role == 'Haproxy' and action == 'clear'
 
     # - name: Include Keepalived clear tasks
     #   include_role:
