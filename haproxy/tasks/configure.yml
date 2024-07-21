@@ -17,13 +17,22 @@
   register: haproxy_status
   become: true
 
+- name: Display HAProxy status
+  command: systemctl status haproxy
+  register: haproxy_status
+  become: true
+
 - name: Extract Active status line
   set_fact:
     active_status_line: "{{ haproxy_status.stdout | regex_search('Active: .*', multiline=True) }}"
 
+- name: Determine status color
+  set_fact:
+    status_color: "{% if active_status_line is search('active \\(running\\)') %}\u001b[32m{% else %}\u001b[31m{% endif %}"
+
 - name: Highlight Active status line
   set_fact:
-    highlighted_active_status: "\u001b[32m{{ active_status_line }}\u001b[0m"
+    highlighted_active_status: "{{ status_color }}{{ active_status_line }}\u001b[0m"
 
 - name: Show HAProxy status output
   debug:
