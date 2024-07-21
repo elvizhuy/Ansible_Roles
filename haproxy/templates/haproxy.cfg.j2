@@ -1,25 +1,413 @@
 global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
+        # http://www.haproxy.org/download/1.6/doc/management.txt
+        maxconn         10000
+        stats socket /var/run/haproxy.stat uid hatop gid hatop mode 600
+        stats timeout 2m
+        log             127.0.0.1 local0
+        daemon
 
+        # set default parameters to the modern configuration
+        tune.ssl.default-dh-param 2048
+
+        # https://mozilla.github.io/server-side-tls/ssl-config-generator/
+        ssl-default-bind-ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK
+        ssl-default-bind-options force-tlsv12  no-tls-tickets
+        
+        
 defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
+        timeout connect 60m
+        # this value >= timeout server
+        timeout client 60m
+        # this value should > request time out on jetty server
+        # work-arround for https://dev.eclipse.org/mhonarc/lists/jetty-dev/msg02725.html
+        timeout server 60m
+        # http://blog.haproxy.com/2his5/10/14/whats-new-in-haproxy-1-6/
+        # part HTTP connection sharing
+        # http://cbonte.github.io/haproxy-dconv/configuration-1.6.html#4-http-reuse
+        #http-reuse safe
+
+######################### fontend ########################
+frontend http_his_in
+        bind            *:8080
+
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_his if localhost
+
+frontend  https_in
+        bind            *:443 ssl crt /etc/haproxy/certs/bvptw.vn.pem
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        timeout         http-request 10s
+
+	acl host_his_1  hdr(host) -i his.bvptw.vn
+		use_backend backend_sakura if host_his_1
+
+	acl host_api_sakura_pdf hdr(host) -i api-his.bvptw.vn
+	acl path_pdf_api_sakura url_beg /pdf
+	acl exclude_pdf_viewer path_beg /pdf-viewer
+		use_backend backend_pdf_api_sakura if host_api_sakura_pdf path_pdf_api_sakura !exclude_pdf_viewer
+
+	acl host_api_sakura hdr(host) -i api-his.bvptw.vn
+		use_backend backend_api_sakura if host_api_sakura !path_pdf_api_sakura
+
+
+	acl host_his2_1  hdr(host)            -i   his2.bvptw.vn
+            use_backend backend_his            if host_his2_1
+	acl host_report_1  hdr(host)            -i   report.bvptw.vn
+            use_backend backend_report            if host_report_1
+
+	acl host_emr_1  hdr(host)            -i   emr.bvptw.vn
+            use_backend backend_emr            if host_emr_1
+	acl host_emr_pdf  hdr(host)            -i  emr-api.bvptw.vn
+      	acl path_pdf_api_emr path_beg /pdf
+	acl exclude_emr_pdf_viewer path_beg /pdf-viewer
+	    use_backend backend_emr_pdf            if host_emr_pdf path_pdf_api_emr !exclude_emr_pdf_viewer 	
+	acl host_emr_be_1  hdr(host)            -i  emr-api.bvptw.vn
+            use_backend backend_emr_be            if host_emr_be_1 !path_pdf_api_emr
+	
+	acl host_signer_1  hdr(host)            -i   signer.bvptw.vn
+            use_backend backend_signer            if host_signer_1
+	acl host_ttb  hdr(host)            -i   ttb.bvptw.vn
+            use_backend backend_ttb            if host_ttb
+	acl host_ttb_api  hdr(host)            -i   ttb-api.bvptw.vn
+            use_backend backend_ttb_api          if host_ttb_api
+
+	acl host_pacsdc  hdr(host)            -i   pacsdc.bvptw.vn
+            use_backend backend_pacsdc            if host_pacsdc
+	acl host_pacsnondc  hdr(host)            -i   pacsnondc.bvptw.vn
+            use_backend backend_pacsnondc          if host_pacsnondc
+
+frontend http_his2_in
+        bind            *:8082
+
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl http_his2_in src 0.0.0.0/0
+            use_backend backend_his2 if http_his2_in
+	acl host_his2_1  hdr(host)            -i   his2.bvptw.vn
+            use_backend backend_his2            if host_his2_1
+
+
+frontend http_report_in
+        bind            *:2401
+
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_report if localhost
+	acl host_report_1  hdr(host)            -i   report.bvptw.vn
+            use_backend backend_report            if host_report_1
+
+
+frontend http_emr_in
+        bind            *:2382
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_emr if localhost
+	acl host_emr_1  hdr(host)            -i   emr.bvptw.vn
+            use_backend backend_emr            if host_emr_1
+
+
+frontend http_signer_in
+        bind            *:2391
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_signer if localhost
+	acl host_signer_1  hdr(host)            -i   signer.bvptw.vn
+            use_backend backend_signer            if host_signer_1
+
+
+frontend http_emr_be_in
+        bind            *:2301
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_emr_be if localhost
+
+
+frontend http_pdf
+        bind            *:2201
+        mode            http
+        log             global
+        option          httplog
+        option          dontlognull
+        #option http-buffer-request
+        timeout http-request 60m
+
+        acl localhost src 0.0.0.0/0
+            use_backend backend_pdf if localhost
+
+
+######################### backend ########################
+backend backend_pacsdc
+        mode http
+	balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.40.42:8080 check cookie s50
+
+backend backend_pacsnondc
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.40.42:91 check cookie s50
+################## SAKURA ########################
+backend backend_sakura
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.30.50:2320 check cookie s50
+                server s51 10.0.30.51:2320 check cookie s51
+
+backend backend_api_sakura
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.30.50:2301 check cookie s50
+                server s51 10.0.30.51:2301 check cookie s51
+
+backend backend_pdf_api_sakura
+        mode http
+	http-request replace-uri ^/pdf/(.*) /\1
+#	http-request set-path %[path,regsub(^/pdf/,/)]
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.30.50:2200 check cookie s50
+                server s51 10.0.30.51:2200 check cookie s51
+
+################## END ########################
+
+backend backend_emr_pdf
+	http-request replace-path ^/pdf/(.*) /\1
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s50 10.0.30.152:2200 check cookie s50
+backend backend_emr
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s40 10.0.30.40:2382 check cookie s40
+                server s41 10.0.30.41:2382 check cookie s41
+
+backend backend_pdf
+        mode http
+        http-request replace-uri ^/pdf/(.*) /\1 
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s40 10.0.30.40:2201 check cookie s40
+                server s41 10.0.30.41:2201 check cookie s41
+
+backend backend_emr_be
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        
+        option httpchk
+        
+                http-check connect
+                http-check send meth GET uri /api/file/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/html-editor/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/master-data/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/patient/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/phat-thuoc/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/signer/v1/utils/health
+                http-check expect status 0-401
+                
+                http-check connect
+                http-check send meth GET uri /api/vital-signs/v1/utils/health
+                http-check expect status 0-401
+
+        cookie JSESSIONID prefix
+                server s40 10.0.30.40:2301 check cookie s40
+                server s41 10.0.30.41:2301 check cookie s41
+
+backend backend_signer
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s40 10.0.30.40:2391 check cookie s40
+                server s41 10.0.30.41:2391 check cookie s41
+
+backend backend_nckh
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s30 10.0.30.30:2389 check cookie s30
+
+backend backend_nckh-api
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s30 10.0.30.30:8082 check cookie s30
+
+backend backend_ttdh-api
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s30 10.0.30.30:2301 check cookie s30
+
+backend backend_ttdh
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+                server s30 10.0.30.30:2398 check cookie s30
+
+backend backend_his
+        mode http
+        balance roundrobin
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+        cookie backend_his insert
+
+                #server 31-81-srv 10.0.30.31:8081 cookie 31-81-srv check weight 5
+                #server 24-81-srv 10.0.30.24:8081 cookie 24-81-srv check weight 5
+                #server 26-81-srv 10.0.30.26:8081 cookie 26-81-srv check weight 5
+                #server 60-81-srv 10.0.30.60:8081 cookie 60-81-srv check weight 5
+                #server 61-81-srv 10.0.30.61:8081 cookie 61-81-srv check weight 5
+                server s9_81 10.0.30.9:8081 check cookie s9_81
+                server s33_81 10.0.30.33:8081 check cookie s33_81
+                server s9_82 10.0.30.9:8082 check cookie s9_82
+                server s33_82 10.0.30.33:8082 check cookie s33_82
+
+backend backend_his2
+
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+        cookie backend_his2 insert
+
+                server 31-81-srv 10.0.30.31:8082 cookie 31-81-srv check weight 5
+
+backend backend_report
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+        cookie backend_his insert
+
+                server s150 10.0.30.150:2301 check cookie s150
+                #server s200 10.0.30.200:2301 check cookie s200
+
+backend backend_ttb
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+        cookie backend_his insert
+                server s150 10.0.30.224:9772 check cookie s150
+
+backend backend_ttb_api
+        mode http
+        balance leastconn
+        option httpclose
+        option forwardfor
+        cookie JSESSIONID prefix
+        cookie backend_his insert
+                server s150 10.0.30.224:9769 check cookie s150
+
+#http://www.networkinghowtos.com/howto/viewing-haproxy-statistics/
+listen stats
+        bind  *:9000       #Listen on all IP's on port 9000
+        mode http
+        balance
+        timeout client 5000
+        timeout connect 4000
+        timeout server 30000
+
+        #This is the virtual URL to access the stats page
+        stats uri /haproxy
+
+        #Authentication realm. This can be set to anything. Escape space characters with a backslash.
+        stats realm HAProxy\ Statistics
+
+        #The user/pass you want to use. Change this password!
+        stats auth admin:1
+
+        #This allows you to take down and bring up back end servers.
+        #This will produce an error on older versions of HAProxy.
+        stats admin if TRUE
+

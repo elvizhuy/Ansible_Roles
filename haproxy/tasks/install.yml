@@ -32,3 +32,27 @@
     mode: '0755'
   when: ansible_os_family == "RedHat"
   become: true
+
+- name: Check for existing .pem files in certs directory
+  find:
+    paths: /etc/haproxy/certs
+    patterns: "*.pem"
+  register: pem_files
+
+- name: Copy bvptw.vn.pem to certs directory
+  copy:
+    src: files/bvptw.vn.pem
+    dest: /etc/haproxy/certs/bvptw.vn.pem
+    owner: root
+    group: root
+    mode: '0644'
+  when: pem_files.matched == 0
+  become: true
+
+- name: Update HAProxy configuration
+  template:
+    src: haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  notify:
+    - Restart HAProxy
+  become: true
