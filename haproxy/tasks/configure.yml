@@ -11,3 +11,12 @@
     name: haproxy
     state: restarted
   become: true
+
+- name: Display HAProxy status
+  command: systemctl status haproxy
+  register: haproxy_status
+  become: true
+
+- name: Show HAProxy status output
+  debug:
+    var: haproxy_status.stdout
