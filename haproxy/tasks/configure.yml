@@ -6,12 +6,6 @@
     - Restart HAProxy
   become: true
 
-- name: Restart HAProxy
-  service:
-    name: haproxy
-    state: restarted
-  become: true
-  
 - name: Display HAProxy status
   command: systemctl status haproxy
   register: haproxy_status
