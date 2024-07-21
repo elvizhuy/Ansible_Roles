@@ -2,15 +2,10 @@
   become: yes
   vars:
     role: "{{ role }}"
+    action: "{{ action }}"
   tasks:
     - name: Include HAProxy configuration tasks
       include_role:
         name: haproxy
         tasks_from: configure.yml
       when: role == 'Haproxy' and action == 'update'
-
-    - name: Include Keepalived configuration tasks
-      include_role:
-        name: keepalived
-        tasks_from: configure.yml
-      when: role == 'Keepalived' and action == 'update'
