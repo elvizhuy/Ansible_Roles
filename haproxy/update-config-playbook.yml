@@ -8,4 +8,4 @@
       include_role:
         name: haproxy
         tasks_from: configure.yml
-      when: role == 'Haproxy' and action == 'update'
+      when: role == 'Haproxy' and action == 'update-config'
