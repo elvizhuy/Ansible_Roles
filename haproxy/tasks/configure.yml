@@ -17,6 +17,15 @@
   register: haproxy_status
   become: true
 
+- name: Extract Active status line
+  set_fact:
+    active_status_line: "{{ haproxy_status.stdout | regex_search('Active: .*', multiline=True) }}"
+
+- name: Highlight Active status line
+  set_fact:
+    highlighted_active_status: "\u001b[32m{{ active_status_line }}\u001b[0m"
+
 - name: Show HAProxy status output
   debug:
-    var: haproxy_status.stdout
+    msg: |
+      {{ haproxy_status.stdout | regex_replace(active_status_line, highlighted_active_status) }}
