@@ -2,7 +2,7 @@
 
 - name: Apply Keepalived configuration for MASTER
   template:
-    src: "{{ role_paths }}/templates/keepalived_master.conf.j2"
+    src: "{{ role_path }}/templates/keepalived_master.conf.j2"
     dest: /etc/keepalived/keepalived.conf
   when: "'master' in group_names" 
   notify:
@@ -11,7 +11,7 @@
 
 - name: Apply Keepalived configuration for SLAVE
   template:
-    src: "{{ role_paths }}/templates/keepalived_slave.conf.j2"
+    src: "{{ role_path }}/templates/keepalived_slave.conf.j2"
     dest: /etc/keepalived/keepalived.conf
   when: "'slave' in group_names"
   notify:
