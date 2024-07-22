@@ -2,10 +2,11 @@ all:
   children:
     bvp:
       children:
-        bvp_keepalived_servers:
+        master:
           hosts:
             10.0.50.26:
               role: master
+        slave:
+          hosts:
             10.0.50.28:
               role: slave
-
