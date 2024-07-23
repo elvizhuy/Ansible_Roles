@@ -362,7 +362,9 @@ else
 fi
 
 # Install node exporter / container exporter / cadvisor
-install_prometheus_grafana_agents
+if [ ! -z "$is_docker_exist" ]; then
+    install_prometheus_grafana_agents
+fi
 
 ###--------
 # Reboot the server
