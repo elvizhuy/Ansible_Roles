@@ -1,0 +1,44 @@
+global_defs {
+    script_user root
+    enable_script_security
+}
+
+vrrp_script chk_haproxy {
+    script "pidof haproxy"
+    interval 2
+    weight 2
+}
+
+vrrp_script chk_proxyip {
+    script "/bin/ping -c 1 -w 1 10.0.50.26"
+    interval 2
+    fall 2
+    rise 2
+}
+
+vrrp_instance VI_1 {
+    state MASTER
+    interface ens160
+    mcast_src_ip 10.0.50.26
+    virtual_router_id 51
+    priority 103
+    advert_int 1
+    accept
+    garp_master_refresh 5
+    garp_master_refresh_repeat 1
+    authentication {
+        auth_type PASS
+        auth_pass isofh@123
+    }
+
+    virtual_ipaddress {
+        10.0.50.32/24 dev ens160
+        10.0.50.33/24 dev ens160
+    }
+
+    track_script {
+        chk_haproxy
+        chk_proxyip
+    }
+}
+
