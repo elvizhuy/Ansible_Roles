@@ -5,7 +5,7 @@ is_centos=`awk -F '=' '/PRETTY_NAME/ { print $2 }' /etc/os-release | egrep Rocky
 
 # Function to set up the hostname
 function set_hostname() {
-    read -p "Enter the new hostname: " new_hostname
+    new_hostname="$NEW_HOSTNAME"
 
     # Validate the hostname (optional)
     if [[ ! "$new_hostname" =~ ^[a-zA-Z0-9.-]+$ ]]; then
@@ -85,21 +85,19 @@ EOF
 
 # Create user isofh
 function create_user() {
-    read -p "Do you want to create a user? [y/n]: " adduser
-    if [ "$adduser" == 'y' ]; then
-        read -p "Username: " user
+    if [ "$CREATE_USER" == 'y' ]; then
+        user="$USERNAME"
+        userpassword="$PASSWORD"
         if [ "$user" == 'isofh' ]; then
             useradd -ms /bin/bash isofh
-#            echo "isofh ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+            echo "isofh ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-            # Set the password for the user isofh
-            read -s -p "Set the password for the user isofh: " userpassword
             echo -e "$userpassword\n$userpassword" | passwd isofh
 
             echo "Created the user 'isofh' and set the password successfully."
-        elif [ "$user" != 'isofh' ]; then
+        else
             echo "Invalid username, exiting."
-            exit
+            exit 1
         fi
     fi
 }
@@ -122,7 +120,7 @@ EOF
 }
 
 #Function install Prometheus Grafana agents
-function install_node_exporter(){
+function install_prometheus_grafana_agents(){
 sudo docker run -d \
     --name node-exporter-isofh \
     --restart unless-stopped \
@@ -289,11 +287,9 @@ function docker_install() {
 
 # Function to reboot the server
 function reboot_server() {
-	read -p "Please reboot for apply all config. [y/n]: " -n 1 -r
-	echo    
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-	    /sbin/reboot
-	fi
+    if [ "$REBOOT" == 'y' ]; then
+        /sbin/reboot
+    fi
 }
 
 ############################################################
@@ -310,16 +306,14 @@ setup_ssh_keys_root
 # Create user isofh
 create_user
 
-read -p "Do you want to add an SSH key for user isofh? (y/n): " addKey
-if [ "$addKey" == "y" ]; then
+if [ "$ADD_SSH_KEY" == "y" ]; then
     # Set up SSH keys for the 'isofh' user
     setup_ssh_keys_isofh
 else
     echo "Skipping SSH key setup."
 fi
 
-read -p "Do you want to add aliases for user isofh? (y/n): " addAliases
-if [ "$addAliases" == "y" ]; then
+if [ "$ADD_ALIASES" == "y" ]; then
     # Add aliases for the user 'isofh'
     configure_bash_aliases
     echo "Aliases added for user isofh."
@@ -360,17 +354,15 @@ if [ ! -z "$is_docker_exist" ]; then
 	echo "Warning: docker already exists. "
 fi
 
-echo "Do you want to install Docker & Docker Compose? [y/n]: "
-read docker
-if [ $docker == 'y' ]; then
+if [ "$INSTALL_DOCKER" == "y" ]; then
 	docker_install
 	docker_compose_install
-elif [ $docker != 'y' ]; then
+else
 	echo "Docker not installed"
 fi
 
 # Install node exporter / container exporter / cadvisor
-install_node_exporter
+install_prometheus_grafana_agents
 
 ###--------
 # Reboot the server
