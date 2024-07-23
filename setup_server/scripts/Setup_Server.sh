@@ -5,7 +5,7 @@ is_centos=`awk -F '=' '/PRETTY_NAME/ { print $2 }' /etc/os-release | egrep Rocky
 
 # Function to set up the hostname
 function set_hostname() {
-    new_hostname="$NEW_HOSTNAME"
+    new_hostname="$HOSTNAME"
 
     # Validate the hostname (optional)
     if [[ ! "$new_hostname" =~ ^[a-zA-Z0-9.-]+$ ]]; then
