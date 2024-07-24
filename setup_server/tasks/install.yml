@@ -1,6 +1,6 @@
 - name: Copy Setup_Server.sh script to target server root directory
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/../scripts/Setup_Server.sh"
+    src: "{{ playbook_dir }}/scripts/Setup_Server.sh"
     dest: /Setup_Server.sh
     mode: '0755'
   become: true
