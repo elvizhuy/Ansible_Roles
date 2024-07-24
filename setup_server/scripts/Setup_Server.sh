@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 is_ubuntu=`awk -F '=' '/PRETTY_NAME/ { print $2 }' /etc/os-release | egrep Ubuntu -i`
 is_centos=`awk -F '=' '/PRETTY_NAME/ { print $2 }' /etc/os-release | egrep Rocky -i`
 
