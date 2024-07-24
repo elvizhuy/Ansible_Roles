@@ -2,5 +2,7 @@ all:
   children:
     bvp:
       hosts:
-        10.0.50.32
+        10.0.50.32:
+          ansible_user: root
+
 

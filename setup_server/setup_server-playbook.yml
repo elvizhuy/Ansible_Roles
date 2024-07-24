@@ -1,4 +1,6 @@
 - hosts: "{{ project }}"
   become: yes
+  become_user: root
   roles:
-    - setup_server
+    - role: setup_server
+      tasks_from: install.yml
