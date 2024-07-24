@@ -2,6 +2,6 @@ all:
   children:
     bvp:
       children:
-          hosts:
-            10.0.50.32:
+        hosts:
+          10.0.50.32:
 
