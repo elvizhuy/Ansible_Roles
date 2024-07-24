@@ -1,5 +1,4 @@
 ---
----
 - name: Copy Setup_Server.sh script to target server root directory
   ansible.builtin.copy:
     src: "{{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh"
