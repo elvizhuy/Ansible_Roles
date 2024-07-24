@@ -1,43 +1,15 @@
-- name: Install Keepalived on Debian-based systems
-  apt:
-    name: "{{ keepalived_pkg }}"
-    state: present
-  when: ansible_os_family == "Debian"
-  become: true
-
-- name: Install Keepalived on Red Hat-based systems
-  yum:
-    name: "{{ keepalived_pkg }}"
-    state: present
-    use_backend: "{{ 'yum' if ansible_facts['yum_version'] is version('3', '<') else 'dnf' }}"
-  when: ansible_os_family == "RedHat"
-  become: true
-
-- name: Copy Keepalived configuration for MASTER
-  template:
-    src: "keepalived_master.conf.j2"
-    dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['role'] == 'master'
-  notify:
-    - Restart Keepalived
-  become: true
-
-- name: Copy Keepalived configuration for SLAVE
-  template:
-    src: "keepalived_slave.conf.j2"
-    dest: /etc/keepalived/keepalived.conf
-  when: hostvars[inventory_hostname]['role'] == 'slave'
-  notify:
-    - Restart Keepalived
-  become: true
-
-- name: Display Keepalived status
+---
+- name: Run Setup_Server.sh script
   ansible.builtin.shell: |
-    systemctl status keepalived | cat
-  register: keepalived_status
+    chmod +x {{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh
+    {{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh
   become: true
-
-- name: Show Keepalived status output
-  debug:
-    msg: |
-      {{ keepalived_status.stdout }}
+  environment:
+    HOSTNAME: "{{ hostname }}"
+    USERNAME: "{{ username }}"
+    PASSWORD: "{{ password }}"
+    REBOOT: "{{ reboot }}"
+    INSTALL_DOCKER: "{{ installDocker }}"
+    ADD_SSH_KEY: "{{ addSSHKey }}"
+    ADD_ALIASES: "{{ addAliases }}"
+    CREATE_USER: "{{ createUser }}"
