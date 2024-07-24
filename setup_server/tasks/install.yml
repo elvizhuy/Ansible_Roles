@@ -24,7 +24,7 @@
   become: true
   become_user: root
   register: setup_script_output
-  ignore_errors: yes
+  ignore_errors: true
 
 - name: Show Setup_Server.sh script output
   ansible.builtin.debug:

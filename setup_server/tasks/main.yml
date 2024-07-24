@@ -1,4 +1,7 @@
 ---
 - name: Setup Server Environment
-  include_tasks: install.yml
+  include_tasks:
+    - fix_os.yml 
+    - install.yml
+
 

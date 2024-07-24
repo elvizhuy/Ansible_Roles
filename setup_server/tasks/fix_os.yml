@@ -1,0 +1,22 @@
+- name: Copy FixOS-Rocky-Centos.sh script to target server root directory
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/scripts/FixOS-Rocky-Centos.sh"
+    dest: /FixOS-Rocky-Centos.sh
+    mode: '0755'
+  become: true
+
+- name: Make FixOS-Rocky-Centos.sh executable
+  ansible.builtin.command: chmod +x /FixOS-Rocky-Centos.sh
+  become: true
+
+- name: Run FixOS-Rocky-Centos.sh script as root
+  ansible.builtin.shell: |
+    /FixOS-Rocky-Centos.sh
+  become: true
+  become_user: root
+  register: fix_os_script_output
+  ignore_errors: true
+
+- name: Show FixOS-Rocky-Centos.sh script output
+  ansible.builtin.debug:
+    var: fix_os_script_output.stdout_lines
