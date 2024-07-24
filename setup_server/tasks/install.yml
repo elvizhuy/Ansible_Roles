@@ -1,9 +1,19 @@
 ---
-- name: Run Setup_Server.sh script
-  ansible.builtin.shell: |
-    chmod +x {{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh
-    {{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh
+---
+- name: Copy Setup_Server.sh script to target server root directory
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/{{ project }}/scripts/Setup_Server.sh"
+    dest: /Setup_Server.sh
+    mode: '0755'
   become: true
+
+- name: Make Setup_Server.sh executable
+  ansible.builtin.command: chmod +x /Setup_Server.sh
+  become: true
+
+- name: Run Setup_Server.sh script as root
+  ansible.builtin.shell: |
+    /Setup_Server.sh
   environment:
     HOSTNAME: "{{ hostname }}"
     USERNAME: "{{ username }}"
@@ -13,3 +23,5 @@
     ADD_SSH_KEY: "{{ addSSHKey }}"
     ADD_ALIASES: "{{ addAliases }}"
     CREATE_USER: "{{ createUser }}"
+  become: true
+  become_user: root
