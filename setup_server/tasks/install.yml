@@ -23,3 +23,8 @@
     CREATE_USER: "{{ createUser }}"
   become: true
   become_user: root
+  register: setup_script_output
+
+- name: Show Setup_Server.sh script output
+  ansible.builtin.debug:
+    var: setup_script_output.stdout_lines
