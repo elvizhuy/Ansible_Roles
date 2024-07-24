@@ -152,8 +152,9 @@ function install_prometheus_grafana_agents(){
     --name container-exporter \
     -v "/var/run/docker.sock:/var/run/docker.sock" \
     -p 19094:19092 \
-    nguyenngochuy/container-exporter:v20.10.14 \
+    nguyenngochuy/container-exporter:v24.0.6 \
     -listen-address=:19092
+
     echo "Node Exporter - Cadvisor - Container Exporter have been installed successfully."
 }
 
