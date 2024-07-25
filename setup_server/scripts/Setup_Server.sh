@@ -121,39 +121,40 @@ EOF
 
 #Function install Prometheus Grafana agents
 function install_prometheus_grafana_agents(){
-sudo docker run -d \
-    --name node-exporter-isofh \
-    --restart unless-stopped \
-    --publish 19100:9100 \
-    --volume /proc:/host/proc:ro \
-    --volume /sys:/host/sys:ro \
-    --volume /:/rootfs:ro \
-    prom/node-exporter:latest \
-    --path.procfs /host/proc \
-    --path.rootfs /rootfs \
-    --path.sysfs /host/sys \
-    --collector.filesystem.mount-points-exclude "^/(sys|proc|dev|host|etc)($$|/)"
+    sudo docker run -d \
+        --name node-exporter-isofh \
+        --restart unless-stopped \
+        --publish 19100:9100 \
+        --volume /proc:/host/proc:ro \
+        --volume /sys:/host/sys:ro \
+        --volume /:/rootfs:ro \
+        prom/node-exporter:latest \
+        --path.procfs /host/proc \
+        --path.rootfs /rootfs \
+        --path.sysfs /host/sys \
+        --collector.filesystem.mount-points-exclude "^/(sys|proc|dev|host|etc)($$|/)"
 
-sudo docker run \
-  --volume=/:/rootfs:ro \
-  --volume=/var/run:/var/run:ro \
-  --volume=/sys:/sys:ro \
-  --volume=/var/lib/docker/:/var/lib/docker:ro \
-  --volume=/dev/disk/:/dev/disk:ro \
-  --publish=19093:8080 \
-  --detach=true \
-  --restart always \
-  --name=cadvisor-isofh \
-  --privileged \
-  --device=/dev/kmsg \
-  gcr.io/cadvisor/cadvisor:latest
+    sudo docker run \
+    --volume=/:/rootfs:ro \
+    --volume=/var/run:/var/run:ro \
+    --volume=/sys:/sys:ro \
+    --volume=/var/lib/docker/:/var/lib/docker:ro \
+    --volume=/dev/disk/:/dev/disk:ro \
+    --publish=19093:8080 \
+    --detach=true \
+    --restart always \
+    --name=cadvisor-isofh \
+    --privileged \
+    --device=/dev/kmsg \
+    gcr.io/cadvisor/cadvisor:latest
 
-sudo docker run -d \
-  --name container-exporter \
-  -v "/var/run/docker.sock:/var/run/docker.sock" \
-  -p 19094:19092 \
-  nguyenngochuy/container-exporter:v20.10.14 \
-  -listen-address=:19092
+    sudo docker run -d \
+    --name container-exporter \
+    -v "/var/run/docker.sock:/var/run/docker.sock" \
+    -p 19094:19092 \
+    nguyenngochuy/container-exporter:v20.10.14 \
+    -listen-address=:19092
+    echo "Node Exporter - Cadvisor - Container Exporter have been installed successfully."
 }
 
 # Function to set file limits
