@@ -357,14 +357,15 @@ fi
 if [ "$INSTALL_DOCKER" == "y" ]; then
 	docker_install
 	docker_compose_install
+    install_prometheus_grafana_agents
 else
 	echo "Docker not installed"
 fi
 
 # Install node exporter / container exporter / cadvisor
-if [ ! -z "$is_docker_exist" ]; then
-    install_prometheus_grafana_agents
-fi
+# if [ ! -z "$is_docker_exist" ]; then
+    
+# fi
 
 ###--------
 # Reboot the server
