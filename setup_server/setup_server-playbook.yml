@@ -2,5 +2,6 @@
   become: yes
   become_user: root
   roles:
-    - role: setup_server
-      tasks_from: install.yml
+    - setup_server
+    # - role: setup_server
+    #   tasks_from: install.yml
