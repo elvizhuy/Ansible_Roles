@@ -1,9 +1,10 @@
 ---
+- name: Include install tasks
+  include_tasks: install.yml
+  
 - name: Include fix_os tasks
   include_tasks: fix_os.yml
 
-- name: Include install tasks
-  include_tasks: install.yml
 
 
 
