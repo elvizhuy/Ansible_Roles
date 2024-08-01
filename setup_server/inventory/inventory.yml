@@ -3,6 +3,7 @@ all:
     bvp:
       hosts:
         10.0.50.33:
+        10.0.50.36:
           ansible_user: root
 
 
