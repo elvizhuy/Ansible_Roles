@@ -1,0 +1,8 @@
+- name: Add hostname entries to /etc/hosts
+  lineinfile:
+        path: /etc/hosts
+        line: "{{ item.0 }} {{ item.1 }}"
+        create: yes
+  with_together:
+        - "{{ ip_list }}"
+        - "{{ hostname_list }}"
