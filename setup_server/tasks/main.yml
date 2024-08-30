@@ -5,7 +5,7 @@
 - name: Include fix_os tasks
   include_tasks: fix_os.yml
 
-- name: Include variables from mail.yml
+- name: Include variables from main.yml
   include_vars: vars/mail.yml
   include_tasks: ip_host.yml
 
