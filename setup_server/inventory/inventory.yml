@@ -4,5 +4,8 @@ all:
       hosts:
         10.0.50.33:
           ansible_user: root
+        10.0.50.66:
+          ansible_user: root
+
 
 
