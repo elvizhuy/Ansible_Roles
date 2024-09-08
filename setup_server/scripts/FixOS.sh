@@ -3,6 +3,7 @@
 yum update -y && yum upgrade -y
 yum install aide rsyslog openscap-scanner scap-security-guide -y
 systemctl  restart  rsyslog && systemctl  enable  rsyslog
+# Dùng fwd hoặc iptables tùy thuộc phiên bản os
 systemctl stop firewalld
 systemctl disable firewalld
 systemctl mask firewalld
